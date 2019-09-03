@@ -49,10 +49,17 @@ def get_channels():
     for item in rss["rss"]["channel"]["item"]:
         channels.update({
             index: {
-                'album_cover': re.search("src='([^']+)'", item['description']).group(1),
-                'title': item['title'],
-                'description': item['itunes:summary'],
-                'url': build_url({'mode': 'playlist', 'url': item['link']})
+                'album_cover':
+                re.search("src='([^']+)'", item['description']).group(1),
+                'title':
+                item['title'],
+                'description':
+                item['itunes:summary'],
+                'url':
+                build_url({
+                    'mode': 'playlist',
+                    'url': item['link']
+                })
             }
         })
         index += 1
@@ -74,10 +81,17 @@ def get_playlists(url):
     for item in rss["rss"]["channel"]["item"]:
         playlists.update({
             index: {
-                'album_cover': re.search("src='([^']+)'", item['description']).group(1),
-                'title': item['title'],
-                'description': item['itunes:summary'],
-                'url': build_url({'mode': 'stream', 'url': item['guid']})
+                'album_cover':
+                re.search("src='([^']+)'", item['description']).group(1),
+                'title':
+                item['title'],
+                'description':
+                item['itunes:summary'],
+                'url':
+                build_url({
+                    'mode': 'stream',
+                    'url': item['guid']
+                })
             }
         })
         index += 1
@@ -98,19 +112,25 @@ def build_menu(items, is_folder):
         # create a list item using the song filename for the label
         li = xbmcgui.ListItem(label=items[item]['title'])
         # set the fanart to the album cover
-        li.setProperty('fanart_image', os.path.join(ADDON_FOLDER, 'resources/media/fanart.jpg'))
+        li.setProperty(
+            'fanart_image',
+            os.path.join(ADDON_FOLDER, 'resources/media/fanart.jpg'))
         if not is_folder:
             li.setProperty('IsPlayable', 'true')
         li.setProperty('PlotOutline', items[item]['description'])
-        li.setInfo('video', {
-            'title': items[item]['title'],
-            'genre': 'Podcast',
-            'plot': items[item]['description']
-        })
+        li.setInfo(
+            'video', {
+                'title': items[item]['title'],
+                'genre': 'Podcast',
+                'plot': items[item]['description']
+            })
         li.setArt({
-            'thumb': items[item]['album_cover'],
-            'poster': items[item]['album_cover'],
-            'fanart': os.path.join(ADDON_FOLDER, 'resources/media/fanart.jpg')
+            'thumb':
+            items[item]['album_cover'],
+            'poster':
+            items[item]['album_cover'],
+            'fanart':
+            os.path.join(ADDON_FOLDER, 'resources/media/fanart.jpg')
         })
         url = items[item]['url']
         items_list.append((url, li, is_folder))
