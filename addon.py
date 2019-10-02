@@ -112,9 +112,6 @@ def build_menu(items, is_folder):
         # create a list item using the song filename for the label
         li = xbmcgui.ListItem(label=items[item]['title'])
         # set the fanart to the album cover
-        li.setProperty(
-            'fanart_image',
-            os.path.join(ADDON_FOLDER, 'resources/media/fanart.jpg'))
         if not is_folder:
             li.setProperty('IsPlayable', 'true')
         li.setProperty('PlotOutline', items[item]['description'])
