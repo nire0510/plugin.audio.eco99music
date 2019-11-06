@@ -2,14 +2,13 @@
 
 import sys
 import os
-import urllib
-import urlparse
 import xbmcaddon
 import xbmcgui
 import xbmcplugin
 import requests
 import re
 import xmltodict
+from six.moves.urllib.parse import parse_qs, urlencode
 
 
 def build_url(query):
@@ -21,7 +20,7 @@ def build_url(query):
     :rtype: str
     """
     base_url = sys.argv[0]
-    return base_url + '?' + urllib.urlencode(query)
+    return base_url + '?' + urlencode(query)
 
 
 def get_rss(url):
@@ -77,7 +76,6 @@ def get_playlists(url):
     rss = get_rss(url)
     playlists = {}
     index = 1
-
     for item in rss["rss"]["channel"]["item"]:
         playlists.update({
             index: {
@@ -90,7 +88,7 @@ def get_playlists(url):
                 'url':
                 build_url({
                     'mode': 'stream',
-                    'url': item['guid']
+                    'url': item['enclosure']['@url']
                 })
             }
         })
@@ -112,9 +110,6 @@ def build_menu(items, is_folder):
         # create a list item using the song filename for the label
         li = xbmcgui.ListItem(label=items[item]['title'])
         # set the fanart to the album cover
-        li.setProperty(
-            'fanart_image',
-            os.path.join(ADDON_FOLDER, 'resources/media/fanart.jpg'))
         if not is_folder:
             li.setProperty('IsPlayable', 'true')
         li.setProperty('PlotOutline', items[item]['description'])
@@ -151,7 +146,7 @@ def play(url):
 
 def main():
     """Main method."""
-    args = urlparse.parse_qs(sys.argv[2][1:])
+    args = parse_qs(sys.argv[2][1:])
     mode = args.get('mode', None)
     if mode is None:
         items = get_channels()
