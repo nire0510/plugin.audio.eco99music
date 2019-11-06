@@ -88,7 +88,7 @@ def get_playlists(url):
                 'url':
                 build_url({
                     'mode': 'stream',
-                    'url': item['guid']
+                    'url': item['enclosure']['@url']
                 })
             }
         })
